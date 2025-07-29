@@ -519,7 +519,7 @@ async function copyUPI() {
     }
 }
 
-// Send order to admin via WhatsApp
+// Send order to admin via Telegram Bot (private message)
 function sendToAdmin() {
     const transactionId = document.getElementById('transactionId').value.trim();
     
@@ -528,11 +528,56 @@ function sendToAdmin() {
         return;
     }
     
-    const message = generateWhatsAppMessage(transactionId);
-    const whatsappUrl = `https://wa.me/918123456789?text=${encodeURIComponent(message)}`;
+    // Prepare Telegram message payload
+    const telegramMessage = {
+        chat_id: 6178260867, // Your personal Telegram chat ID
+        text: `📊 *NEW ORDER RECEIVED* 📊
+        
+👤 *User:* ${currentUser.email}
+💳 *Transaction ID:* ${transactionId}
+🛒 *Service:* ${SERVICE_NAMES[currentOrder.service]}
+🔢 *Quantity:* ${currentOrder.quantity}
+🔗 *Link:* ${currentOrder.link}
+💰 *Amount Paid:* ₹${currentOrder.total}
+⏱️ *Timestamp:* ${new Date().toLocaleString()}`,
+        parse_mode: "Markdown"
+    };
+
+    // Show loading state
+    const submitBtn = document.getElementById('submitPaymentBtn');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+    submitBtn.disabled = true;
+
+    // Send to Telegram API
+    fetch('https://api.telegram.org/bot7192034833:AAHdW7xJBwzMgz8FJ6pPb11fGCDyzHmsasA/sendMessage', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(telegramMessage)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.ok) {
+            // Navigate to thank you page
+            showPage('thankYou');
+        } else {
+            showToast('Failed to send order. Please contact admin directly', 'error');
+            // Fallback to WhatsApp
+            const whatsappUrl = `https://wa.me/918123456789?text=${encodeURIComponent(generateWhatsAppMessage(transactionId))}`;
+            window.open(whatsappUrl, '_blank');
+        }
+    })
+    .catch(error => {
+        showToast('Network error. Using WhatsApp fallback', 'error');
+        console.error('Telegram API error:', error);
+        // Fallback to WhatsApp
+        const whatsappUrl = `https://wa.me/918123456789?text=${encodeURIComponent(generateWhatsAppMessage(transactionId))}`;
+        window.open(whatsappUrl, '_blank');
+    })
     
-    // Open WhatsApp
-    window.open(whatsappUrl, '_blank');
+
     
     // Navigate to thank you page
     showPage('thankYou');
