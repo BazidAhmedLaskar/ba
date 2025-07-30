@@ -497,7 +497,7 @@ function proceedToPayment() {
 
 // Check if order is valid
 function isOrderValid() {
-    return currentOrder.service && currentOrder.link && currentOrder.quantity >= 1000;
+    return currentOrder.service && currentOrder.link && currentOrder.quantity >= 10;
 }
 
 // Copy UPI ID
