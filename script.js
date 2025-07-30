@@ -1,57 +1,43 @@
-// firebase.js
-import { initializeApp } from "firebase/app";
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAvQ5-KLbsiBY7LS2uOGUF0UR0zBke9K6I",
-  authDomain: "merasmm-c89f4.firebaseapp.com",
-  projectId: "merasmm-c89f4",
-  storageBucket: "merasmm-c89f4.appspot.com",
-  messagingSenderId: "721705668276",
-  appId: "1:721705668276:web:e1f5acde72b84409afd1e1"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-
-// Initialize Messaging
-let messaging;
-try {
-  messaging = getMessaging(app);
-  console.log("✅ Firebase Messaging initialized");
-} catch (err) {
-  console.error("🚫 Firebase Messaging init failed:", err);
-}
-
-export { messaging, getToken, onMessage };
-import { messaging, getToken, onMessage } from "./firebase.js";
-
-// ✅ Ask for permission and get FCM token
-const requestPermission = async () => {
-  console.log("Requesting permission...");
-  try {
-    const permission = await Notification.requestPermission();
-    if (permission === "granted") {
-      console.log("✅ Notification permission granted.");
-      const token = await getToken(messaging, {
-        vapidKey: "BMVDKNX5z839WjaMO8ZuDiCbai4EcUEaVTvk31v7xohhHoZ8m8xvUp2AeVxbY6SdyrghPVNYezxYVPnij3dX-8A	"
-      });
-      console.log("📲 FCM Token:", token);
-      // TODO: send token to your server
-    } else {
-      console.log("❌ Notification permission denied.");
-    }
-  } catch (err) {
-    console.error("🚫 Error getting token:", err);
+document.addEventListener('DOMContentLoaded', () => {
+  if (!firebase.messaging.isSupported()) {
+    console.warn('Messaging not supported in this browser.');
+    return;
   }
-};
 
-// 🔔 Listen for foreground messages
-onMessage(messaging, (payload) => {
-  console.log("🔔 Foreground message received:", payload);
+  navigator.serviceWorker.register('firebase-messaging-sw.js')
+    .then((registration) => {
+      console.log('✅ Service Worker Registered');
+
+      const messaging = firebase.messaging();
+
+      messaging.useServiceWorker(registration);
+
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          messaging.getToken({
+            vapidKey: 'BMVDKNX5z839WjaMO8ZuDiCbai4EcUEaVTvk31v7xohhHoZ8m8xvUp2AeVxbY6SdyrghPVNYezxYVPnij3dX-8A',
+          }).then((token) => {
+            console.log('🔑 FCM Token:', token);
+            // You can now send push notifications to this token
+          }).catch((err) => {
+            console.error('❌ Error getting token:', err);
+          });
+        } else {
+          console.warn('🔒 Notification permission denied');
+        }
+      });
+    }).catch((err) => {
+      console.error('⚠️ Service Worker registration failed:', err);
+    });
+
+  // Listen for foreground messages
+  firebase.messaging().onMessage((payload) => {
+    console.log('📬 Foreground message:', payload);
+    alert(`${payload.notification.title}: ${payload.notification.body}`);
+  });
 });
 
-requestPermission();
+    
 
 // Global variables
 let currentUser = null;
