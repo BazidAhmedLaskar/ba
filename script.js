@@ -1,47 +1,39 @@
-// ✅ Initialize Firebase First
-firebase.initializeApp(firebaseConfig);
-
 document.addEventListener('DOMContentLoaded', () => {
   if (!firebase.messaging.isSupported()) {
-    console.warn('❌ Messaging not supported in this browser.');
+    console.warn('Messaging not supported');
     return;
   }
 
-  // ✅ Register the service worker
   navigator.serviceWorker.register('firebase-messaging-sw.js')
     .then((registration) => {
       console.log('✅ Service Worker Registered');
-
       const messaging = firebase.messaging();
+      messaging.useServiceWorker(registration);
 
-      // ✅ Ask for notification permission
       Notification.requestPermission().then((permission) => {
         if (permission === 'granted') {
-          // ✅ Get FCM token
           messaging.getToken({
             vapidKey: 'YOUR_PUBLIC_VAPID_KEY_HERE',
-            serviceWorkerRegistration: registration
           }).then((token) => {
             console.log('🔑 FCM Token:', token);
-            // 👉 Send token to backend to send notifications later
           }).catch((err) => {
-            console.error('❌ Error getting token:', err);
+            console.error('❌ Token error:', err);
           });
         } else {
           console.warn('🔒 Notification permission denied');
         }
       });
-    }).catch((err) => {
-      console.error('⚠️ Service Worker registration failed:', err);
+    })
+    .catch((err) => {
+      console.error('⚠️ Service Worker failed:', err);
     });
 
-  // ✅ Listen to foreground messages
-  const messaging = firebase.messaging();
-  messaging.onMessage((payload) => {
-    console.log('📬 Foreground message received:', payload);
+  firebase.messaging().onMessage((payload) => {
+    console.log('📬 Foreground message:', payload);
     alert(`${payload.notification.title}: ${payload.notification.body}`);
   });
 });
+
 
 
 // Global variables
@@ -118,7 +110,8 @@ document.addEventListener('DOMContentLoaded', function() {
     setupFormListeners();
     
     // Show home page by default
-    showPage('home');
+    const initialPage = window.location.hash ? window.location.hash.substring(1) : 'home';
+    showPage(initialPage);
 });
 
 // Page navigation
