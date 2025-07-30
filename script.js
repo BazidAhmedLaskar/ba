@@ -727,3 +727,22 @@ style.textContent = `
 }
 `;
 document.head.appendChild(style);
+document.addEventListener('DOMContentLoaded', function() {
+    // Firebase Auth Listener
+    if (window.firebaseAuth) {
+        window.firebaseAuth.onAuthStateChanged(user => {
+            currentUser = user;
+            updateUI();
+
+            // ✅ After auth check, show the correct page
+            const requestedPage = window.location.hash ? window.location.hash.substring(1) : 'home';
+            showPage(requestedPage);
+        });
+    } else {
+        // If no Firebase (for testing), still handle hash routing
+        const fallbackPage = window.location.hash ? window.location.hash.substring(1) : 'home';
+        showPage(fallbackPage);
+    }
+
+    setupFormListeners();
+});
