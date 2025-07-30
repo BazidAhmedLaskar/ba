@@ -17,7 +17,7 @@ const SERVICE_CATEGORIES = {
             instagram_followers: {
                 name: '14732 - Instagram Followers [ X ] | 100k/D | Non Refill | Max - 100k',
                 rate: 70,
-                min: 10,
+                min: 100,
                 max: 100000
             }
         }
@@ -497,7 +497,7 @@ function proceedToPayment() {
 
 // Check if order is valid
 function isOrderValid() {
-    return currentOrder.service && currentOrder.link && currentOrder.quantity >= 10;
+    return currentOrder.service && currentOrder.link && currentOrder.quantity >= 100;
 }
 
 // Copy UPI ID
