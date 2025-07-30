@@ -1,41 +1,3 @@
-document.addEventListener('DOMContentLoaded', () => {
-  if (!firebase.messaging.isSupported()) {
-    console.warn('Messaging not supported');
-    return;
-  }
-
-  navigator.serviceWorker.register('firebase-messaging-sw.js')
-    .then((registration) => {
-      console.log('✅ Service Worker Registered');
-      const messaging = firebase.messaging();
-      messaging.useServiceWorker(registration);
-
-      Notification.requestPermission().then((permission) => {
-        if (permission === 'granted') {
-          messaging.getToken({
-            vapidKey: 'YOUR_PUBLIC_VAPID_KEY_HERE',
-          }).then((token) => {
-            console.log('🔑 FCM Token:', token);
-          }).catch((err) => {
-            console.error('❌ Token error:', err);
-          });
-        } else {
-          console.warn('🔒 Notification permission denied');
-        }
-      });
-    })
-    .catch((err) => {
-      console.error('⚠️ Service Worker failed:', err);
-    });
-
-  firebase.messaging().onMessage((payload) => {
-    console.log('📬 Foreground message:', payload);
-    alert(`${payload.notification.title}: ${payload.notification.body}`);
-  });
-});
-
-
-
 // Global variables
 let currentUser = null;
 let currentAuthMode = 'login'; // 'login' or 'signup'
@@ -53,9 +15,9 @@ const SERVICE_CATEGORIES = {
         name: 'Instagram Services',
         services: {
             instagram_followers: {
-                name: '14732 - Instagram Followers [ X ] | 100k/D | Non Refill | Max - 100k price - 70/k ',
+                name: '14732 - Instagram Followers [ X ] | 100k/D | Non Refill | Max - 100k',
                 rate: 70,
-                min: 10,
+                min: 100,
                 max: 100000
             }
         }
@@ -64,7 +26,7 @@ const SERVICE_CATEGORIES = {
         name: 'YouTube Services', 
         services: {
             youtube_views: {
-                name: '15842 - YouTube Views | Fast | Non Refill | Max - 500k price 50/k',
+                name: '15842 - YouTube Views | Fast | Non Refill | Max - 500k',
                 rate: 50,
                 min: 100,
                 max: 500000
@@ -110,8 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupFormListeners();
     
     // Show home page by default
-    const initialPage = window.location.hash ? window.location.hash.substring(1) : 'home';
-    showPage(initialPage);
+    showPage('home');
 });
 
 // Page navigation
@@ -536,7 +497,7 @@ function proceedToPayment() {
 
 // Check if order is valid
 function isOrderValid() {
-    return currentOrder.service && currentOrder.link && currentOrder.quantity >= 1000;
+    return currentOrder.service && currentOrder.link && currentOrder.quantity >= 100;
 }
 
 // Copy UPI ID
@@ -558,7 +519,7 @@ async function copyUPI() {
     }
 }
 
-// Send order to admin via Telegram Bot (private message)
+// Send order to admin via WhatsApp
 function sendToAdmin() {
     const transactionId = document.getElementById('transactionId').value.trim();
     
@@ -567,56 +528,11 @@ function sendToAdmin() {
         return;
     }
     
-    // Prepare Telegram message payload
-    const telegramMessage = {
-        chat_id: 6178260867, // Your personal Telegram chat ID
-        text: `📊 *NEW ORDER RECEIVED* 📊
-        
-👤 *User:* ${currentUser.email}
-💳 *Transaction ID:* ${transactionId}
-🛒 *Service:* ${SERVICE_NAMES[currentOrder.service]}
-🔢 *Quantity:* ${currentOrder.quantity}
-🔗 *Link:* ${currentOrder.link}
-💰 *Amount Paid:* ₹${currentOrder.total}
-⏱️ *Timestamp:* ${new Date().toLocaleString()}`,
-        parse_mode: "Markdown"
-    };
-
-    // Show loading state
-    const submitBtn = document.getElementById('submitPaymentBtn');
-    const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-    submitBtn.disabled = true;
-
-    // Send to Telegram API
-    fetch('https://api.telegram.org/bot7192034833:AAHdW7xJBwzMgz8FJ6pPb11fGCDyzHmsasA/sendMessage', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(telegramMessage)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.ok) {
-            // Navigate to thank you page
-            showPage('thankYou');
-        } else {
-            showToast('Failed to send order. Please contact admin directly', 'error');
-            // Fallback to WhatsApp
-            const whatsappUrl = `https://wa.me/918123456789?text=${encodeURIComponent(generateWhatsAppMessage(transactionId))}`;
-            window.open(whatsappUrl, '_blank');
-        }
-    })
-    .catch(error => {
-        showToast('Network error. Using WhatsApp fallback', 'error');
-        console.error('Telegram API error:', error);
-        // Fallback to WhatsApp
-        const whatsappUrl = `https://wa.me/918123456789?text=${encodeURIComponent(generateWhatsAppMessage(transactionId))}`;
-        window.open(whatsappUrl, '_blank');
-    })
+    const message = generateWhatsAppMessage(transactionId);
+    const whatsappUrl = `https://wa.me/9859130932?text=${encodeURIComponent(message)}`;
     
-
+    // Open WhatsApp
+    window.open(whatsappUrl, '_blank');
     
     // Navigate to thank you page
     showPage('thankYou');
@@ -633,7 +549,7 @@ Link: ${currentOrder.link}`;
 
 // Contact admin
 function contactAdmin() {
-    const whatsappUrl = `https://wa.me/9859130932?text=${encodeURIComponent('Hi, I need help with my order')}`;
+    const whatsappUrl = `https://wa.me/918123456789?text=${encodeURIComponent('Hi, I need help with my order')}`;
     window.open(whatsappUrl, '_blank');
 }
 
@@ -727,22 +643,3 @@ style.textContent = `
 }
 `;
 document.head.appendChild(style);
-document.addEventListener('DOMContentLoaded', function() {
-    // Firebase Auth Listener
-    if (window.firebaseAuth) {
-        window.firebaseAuth.onAuthStateChanged(user => {
-            currentUser = user;
-            updateUI();
-
-            // ✅ After auth check, show the correct page
-            const requestedPage = window.location.hash ? window.location.hash.substring(1) : 'home';
-            showPage(requestedPage);
-        });
-    } else {
-        // If no Firebase (for testing), still handle hash routing
-        const fallbackPage = window.location.hash ? window.location.hash.substring(1) : 'home';
-        showPage(fallbackPage);
-    }
-
-    setupFormListeners();
-});
