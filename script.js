@@ -24,6 +24,34 @@ try {
 }
 
 export { messaging, getToken, onMessage };
+import { messaging, getToken, onMessage } from "./firebase.js";
+
+// ✅ Ask for permission and get FCM token
+const requestPermission = async () => {
+  console.log("Requesting permission...");
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission === "granted") {
+      console.log("✅ Notification permission granted.");
+      const token = await getToken(messaging, {
+        vapidKey: "BMVDKNX5z839WjaMO8ZuDiCbai4EcUEaVTvk31v7xohhHoZ8m8xvUp2AeVxbY6SdyrghPVNYezxYVPnij3dX-8A	"
+      });
+      console.log("📲 FCM Token:", token);
+      // TODO: send token to your server
+    } else {
+      console.log("❌ Notification permission denied.");
+    }
+  } catch (err) {
+    console.error("🚫 Error getting token:", err);
+  }
+};
+
+// 🔔 Listen for foreground messages
+onMessage(messaging, (payload) => {
+  console.log("🔔 Foreground message received:", payload);
+});
+
+requestPermission();
 
 // Global variables
 let currentUser = null;
