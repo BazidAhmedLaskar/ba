@@ -15,9 +15,9 @@ const SERVICE_CATEGORIES = {
         name: 'Instagram Services',
         services: {
             instagram_followers: {
-                name: '14732 - Instagram Followers|  Max - 100k price- 70/k',
+                name: '14732 - Instagram Followers [ X ] | 100k/D | Non Refill | Max - 100k price - 70/k ',
                 rate: 70,
-                min: 100,
+                min: 10,
                 max: 100000
             }
         }
@@ -26,19 +26,30 @@ const SERVICE_CATEGORIES = {
         name: 'YouTube Services', 
         services: {
             youtube_views: {
-                name: '15842 - YouTube Views | Fast | Non Refill | Max - 500k',
+                name: '15842 - YouTube Views | Fast | Non Refill | Max - 500k price 50/k',
                 rate: 50,
                 min: 100,
                 max: 500000
             }
         }
     },
-
+    jiohotstar: {
+        name: 'JioHotstar Services',
+        services: {
+            jiohotstar_premium: {
+                name: '16294 - JioHotstar Premium Boost | 24H | Refill 30D | Max - 50k',
+                rate: 100,
+                min: 1000,
+                max: 50000
+            }
+        }
+    }
+};
 
 const SERVICE_RATES = {
     instagram_followers: 70,
     youtube_views: 50,
-    
+    jiohotstar_premium: 100
 };
 
 const SERVICE_NAMES = {
@@ -486,7 +497,7 @@ function proceedToPayment() {
 
 // Check if order is valid
 function isOrderValid() {
-    return currentOrder.service && currentOrder.link && currentOrder.quantity >= 100;
+    return currentOrder.service && currentOrder.link && currentOrder.quantity >= 1000;
 }
 
 // Copy UPI ID
@@ -508,7 +519,7 @@ async function copyUPI() {
     }
 }
 
-// Send order to admin via WhatsApp
+// Send order to admin via Telegram Bot (private message)
 function sendToAdmin() {
     const transactionId = document.getElementById('transactionId').value.trim();
     
@@ -517,11 +528,56 @@ function sendToAdmin() {
         return;
     }
     
-    const message = generateWhatsAppMessage(transactionId);
-    const whatsappUrl = `https://wa.me/9859130932?text=${encodeURIComponent(message)}`;
+    // Prepare Telegram message payload
+    const telegramMessage = {
+        chat_id: 6178260867, // Your personal Telegram chat ID
+        text: `📊 *NEW ORDER RECEIVED* 📊
+        
+👤 *User:* ${currentUser.email}
+💳 *Transaction ID:* ${transactionId}
+🛒 *Service:* ${SERVICE_NAMES[currentOrder.service]}
+🔢 *Quantity:* ${currentOrder.quantity}
+🔗 *Link:* ${currentOrder.link}
+💰 *Amount Paid:* ₹${currentOrder.total}
+⏱️ *Timestamp:* ${new Date().toLocaleString()}`,
+        parse_mode: "Markdown"
+    };
+
+    // Show loading state
+    const submitBtn = document.getElementById('submitPaymentBtn');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+    submitBtn.disabled = true;
+
+    // Send to Telegram API
+    fetch('https://api.telegram.org/bot7192034833:AAHdW7xJBwzMgz8FJ6pPb11fGCDyzHmsasA/sendMessage', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(telegramMessage)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.ok) {
+            // Navigate to thank you page
+            showPage('thankYou');
+        } else {
+            showToast('Failed to send order. Please contact admin directly', 'error');
+            // Fallback to WhatsApp
+            const whatsappUrl = `https://wa.me/918123456789?text=${encodeURIComponent(generateWhatsAppMessage(transactionId))}`;
+            window.open(whatsappUrl, '_blank');
+        }
+    })
+    .catch(error => {
+        showToast('Network error. Using WhatsApp fallback', 'error');
+        console.error('Telegram API error:', error);
+        // Fallback to WhatsApp
+        const whatsappUrl = `https://wa.me/918123456789?text=${encodeURIComponent(generateWhatsAppMessage(transactionId))}`;
+        window.open(whatsappUrl, '_blank');
+    })
     
-    // Open WhatsApp
-    window.open(whatsappUrl, '_blank');
+
     
     // Navigate to thank you page
     showPage('thankYou');
@@ -538,7 +594,7 @@ Link: ${currentOrder.link}`;
 
 // Contact admin
 function contactAdmin() {
-    const whatsappUrl = `https://wa.me/918123456789?text=${encodeURIComponent('Hi, I need help with my order')}`;
+    const whatsappUrl = `https://wa.me/9859130932?text=${encodeURIComponent('Hi, I need help with my order')}`;
     window.open(whatsappUrl, '_blank');
 }
 
