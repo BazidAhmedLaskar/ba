@@ -1,3 +1,30 @@
+// firebase.js
+import { initializeApp } from "firebase/app";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAvQ5-KLbsiBY7LS2uOGUF0UR0zBke9K6I",
+  authDomain: "merasmm-c89f4.firebaseapp.com",
+  projectId: "merasmm-c89f4",
+  storageBucket: "merasmm-c89f4.appspot.com",
+  messagingSenderId: "721705668276",
+  appId: "1:721705668276:web:e1f5acde72b84409afd1e1"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+// Initialize Messaging
+let messaging;
+try {
+  messaging = getMessaging(app);
+  console.log("✅ Firebase Messaging initialized");
+} catch (err) {
+  console.error("🚫 Firebase Messaging init failed:", err);
+}
+
+export { messaging, getToken, onMessage };
+
 // Global variables
 let currentUser = null;
 let currentAuthMode = 'login'; // 'login' or 'signup'
