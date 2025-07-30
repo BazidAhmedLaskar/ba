@@ -244,3 +244,74 @@ const auth = new FirebaseAuth();
 
 // Export auth for use in other scripts
 window.firebaseAuth = auth;
+// ============================
+// 🚀 Firebase Cloud Messaging
+// ============================
+
+// Initialize Firebase Messaging (after Firebase is initialized)
+let messaging = null;
+
+if (typeof firebase !== 'undefined') {
+    try {
+        messaging = firebase.messaging();
+
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/firebase-messaging-sw.js')
+                .then((registration) => {
+                    console.log('✅ Service Worker registered:', registration);
+
+                    // Use the registered service worker for FCM
+                    messaging.useServiceWorker(registration);
+
+                    // Ask permission for notifications
+                    requestNotificationPermission();
+                })
+                .catch(err => {
+                    console.error('❌ Service Worker registration failed:', err);
+                });
+        }
+    } catch (error) {
+        console.error('🚫 Firebase Messaging init failed:', error);
+    }
+}
+
+// Request permission and get device token
+async function requestNotificationPermission() {
+    try {
+        const permission = await Notification.requestPermission();
+
+        if (permission !== 'granted') {
+            console.warn('🔕 Notification permission denied.');
+            return;
+        }
+
+        const token = await messaging.getToken({
+            vapidKey: 'BMVDKNX5z839WjaMO8ZuDiCbai4EcUEaVTvk31v7xohhHoZ8m8xvUp2AeVxbY6SdyrghPVNYezxYVPnij3dX-8A	' // ← Replace this with your VAPID key from Firebase Console
+        });
+
+        console.log('📲 FCM Token:', token);
+
+        // Optionally save to backend or Firestore
+        // await saveTokenToDatabase(token);
+
+    } catch (err) {
+        console.error('⚠️ Error retrieving FCM token:', err);
+    }
+}
+
+// Handle foreground messages
+if (messaging) {
+    messaging.onMessage((payload) => {
+        console.log('📨 Foreground FCM message:', payload);
+        const { title, body } = payload.notification;
+
+        if (Notification.permission === 'granted') {
+            new Notification(title, {
+                body,
+                icon: '/logo.png' // Optional custom icon
+            });
+        }
+    });
+}
+
