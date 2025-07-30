@@ -1,3 +1,5 @@
+// Ask for permission on load
+window.addEventListener("load", requestPermission);
 document.addEventListener('DOMContentLoaded', () => {
   if (!firebase.messaging.isSupported()) {
     console.warn('Messaging not supported in this browser.');
