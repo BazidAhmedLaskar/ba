@@ -22,73 +22,7 @@
             <div class="nav-brand">
                 <a href="#home" onclick="showPage('home')">MeraSMM</a>
             </div>
-            
-            <!-- Desktop Navigation -->
-            <div class="nav-menu">
-                <a href="#home" onclick="scrollToSection('home')">Home</a>
-                <a href="#services" onclick="scrollToSection('services')">Services</a>
-                <a href="#pricing" onclick="scrollToSection('pricing')">Pricing</a>
-                <a href="#contact" onclick="scrollToSection('contact')">Contact</a>
-                <button id="loginBtn" class="btn btn-primary" onclick="showPage('login')">Login</button>
-                <div id="userMenu" class="user-menu" style="display: none;">
-                    <button class="btn btn-outline" onclick="showPage('dashboard')">Dashboard</button>
-                    <button class="btn btn-ghost" onclick="logout()">Logout</button>
-                </div>
-            </div>
-            
-            <!-- Mobile Hamburger -->
-            <div class="hamburger" onclick="toggleMobileMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-        
-        <!-- Mobile Menu -->
-        <div id="mobileMenu" class="mobile-menu">
-            <a href="#home" onclick="scrollToSection('home'); toggleMobileMenu()">Home</a>
-            <a href="#services" onclick="scrollToSection('services'); toggleMobileMenu()">Services</a>
-            <a href="#pricing" onclick="scrollToSection('pricing'); toggleMobileMenu()">Pricing</a>
-            <a href="#contact" onclick="scrollToSection('contact'); toggleMobileMenu()">Contact</a>
-            <button id="mobileLoginBtn" class="btn btn-primary w-full" onclick="showPage('login'); toggleMobileMenu()">Login</button>
-            <div id="mobileUserMenu" class="mobile-user-menu" style="display: none;">
-                <button class="btn btn-outline w-full" onclick="showPage('dashboard'); toggleMobileMenu()">Dashboard</button>
-                <button class="btn btn-ghost w-full" onclick="logout(); toggleMobileMenu()">Logout</button>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Landing Page -->
-    <div id="homePage" class="page active">
-        <!-- Hero Section -->
-        <section id="home" class="hero">
-            <div class="container">
-                <div class="hero-content">
-                    <div class="hero-text fade-in">
-                        <h1>Boost Your Social Media <span class="text-primary">Instantly</span></h1>
-                        <p>Get real Instagram followers, YouTube views, and Hotstar live boost at unbeatable prices. Fast delivery, 100% safe & trusted.</p>
-                        <div class="hero-buttons">
-                            <button class="btn btn-primary btn-lg" onclick="showPage('login')">
-                                <i class="fas fa-rocket"></i> Get Started - Login
-                            </button>
-                            <button class="btn btn-outline btn-lg" onclick="scrollToSection('services')">
-                                View Services
-                            </button>
-                        </div>
-                        <div class="hero-features">
-                            <div class="feature">
-                                <i class="fas fa-shield-alt text-green"></i>
-                                <span>100% Safe</span>
-                            </div>
-                            <div class="feature">
-                                <i class="fas fa-bolt text-yellow"></i>
-                                <span>Fast Delivery</span>
-                            </div>
-                            <div class="feature">
-                                <i class="fas fa-rupee-sign text-green"></i>
-                                <span>₹70/1K Followers</span>
-                            </div>
-      <style>
+             <style>
         .mera-smm-banner a {
             color: #ffffff;
             text-decoration: underline;
@@ -187,6 +121,72 @@
             });
         });
     </script>
+            <!-- Desktop Navigation -->
+            <div class="nav-menu">
+                <a href="#home" onclick="scrollToSection('home')">Home</a>
+                <a href="#services" onclick="scrollToSection('services')">Services</a>
+                <a href="#pricing" onclick="scrollToSection('pricing')">Pricing</a>
+                <a href="#contact" onclick="scrollToSection('contact')">Contact</a>
+                <button id="loginBtn" class="btn btn-primary" onclick="showPage('login')">Login</button>
+                <div id="userMenu" class="user-menu" style="display: none;">
+                    <button class="btn btn-outline" onclick="showPage('dashboard')">Dashboard</button>
+                    <button class="btn btn-ghost" onclick="logout()">Logout</button>
+                </div>
+            </div>
+            
+            <!-- Mobile Hamburger -->
+            <div class="hamburger" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="mobile-menu">
+            <a href="#home" onclick="scrollToSection('home'); toggleMobileMenu()">Home</a>
+            <a href="#services" onclick="scrollToSection('services'); toggleMobileMenu()">Services</a>
+            <a href="#pricing" onclick="scrollToSection('pricing'); toggleMobileMenu()">Pricing</a>
+            <a href="#contact" onclick="scrollToSection('contact'); toggleMobileMenu()">Contact</a>
+            <button id="mobileLoginBtn" class="btn btn-primary w-full" onclick="showPage('login'); toggleMobileMenu()">Login</button>
+            <div id="mobileUserMenu" class="mobile-user-menu" style="display: none;">
+                <button class="btn btn-outline w-full" onclick="showPage('dashboard'); toggleMobileMenu()">Dashboard</button>
+                <button class="btn btn-ghost w-full" onclick="logout(); toggleMobileMenu()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Landing Page -->
+    <div id="homePage" class="page active">
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-text fade-in">
+                        <h1>Boost Your Social Media <span class="text-primary">Instantly</span></h1>
+                        <p>Get real Instagram followers, YouTube views, and Hotstar live boost at unbeatable prices. Fast delivery, 100% safe & trusted.</p>
+                        <div class="hero-buttons">
+                            <button class="btn btn-primary btn-lg" onclick="showPage('login')">
+                                <i class="fas fa-rocket"></i> Get Started - Login
+                            </button>
+                            <button class="btn btn-outline btn-lg" onclick="scrollToSection('services')">
+                                View Services
+                            </button>
+                        </div>
+                        <div class="hero-features">
+                            <div class="feature">
+                                <i class="fas fa-shield-alt text-green"></i>
+                                <span>100% Safe</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-bolt text-yellow"></i>
+                                <span>Fast Delivery</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-rupee-sign text-green"></i>
+                                <span>₹70/1K Followers</span>
+                            </div>
+     
                     </div>
                     <div class="hero-image slide-up">
                         <img src="https://images.unsplash.com/photo-1611224923853-80b023f02d71?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" alt="Social media analytics and growth">
