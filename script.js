@@ -502,7 +502,7 @@ function isOrderValid() {
 
 // Copy UPI ID
 async function copyUPI() {
-    const upiId = 'merasmm@paytm';
+    const upiId = '9859130932@fam';
     
     try {
         await navigator.clipboard.writeText(upiId);
