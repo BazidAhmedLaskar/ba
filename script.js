@@ -1,26 +1,29 @@
-// Ask for permission on load
-window.addEventListener("load", requestPermission);
+// ✅ Initialize Firebase First
+firebase.initializeApp(firebaseConfig);
+
 document.addEventListener('DOMContentLoaded', () => {
   if (!firebase.messaging.isSupported()) {
-    console.warn('Messaging not supported in this browser.');
+    console.warn('❌ Messaging not supported in this browser.');
     return;
   }
 
+  // ✅ Register the service worker
   navigator.serviceWorker.register('firebase-messaging-sw.js')
     .then((registration) => {
       console.log('✅ Service Worker Registered');
 
       const messaging = firebase.messaging();
 
-      messaging.useServiceWorker(registration);
-
+      // ✅ Ask for notification permission
       Notification.requestPermission().then((permission) => {
         if (permission === 'granted') {
+          // ✅ Get FCM token
           messaging.getToken({
-            vapidKey: 'BMVDKNX5z839WjaMO8ZuDiCbai4EcUEaVTvk31v7xohhHoZ8m8xvUp2AeVxbY6SdyrghPVNYezxYVPnij3dX-8A',
+            vapidKey: 'YOUR_PUBLIC_VAPID_KEY_HERE',
+            serviceWorkerRegistration: registration
           }).then((token) => {
             console.log('🔑 FCM Token:', token);
-            // You can now send push notifications to this token
+            // 👉 Send token to backend to send notifications later
           }).catch((err) => {
             console.error('❌ Error getting token:', err);
           });
@@ -32,14 +35,14 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('⚠️ Service Worker registration failed:', err);
     });
 
-  // Listen for foreground messages
-  firebase.messaging().onMessage((payload) => {
-    console.log('📬 Foreground message:', payload);
+  // ✅ Listen to foreground messages
+  const messaging = firebase.messaging();
+  messaging.onMessage((payload) => {
+    console.log('📬 Foreground message received:', payload);
     alert(`${payload.notification.title}: ${payload.notification.body}`);
   });
 });
 
-    
 
 // Global variables
 let currentUser = null;
