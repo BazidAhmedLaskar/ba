@@ -15,7 +15,7 @@ const SERVICE_CATEGORIES = {
         name: 'Instagram Services',
         services: {
             instagram_followers: {
-                name: '14732 - Instagram Followers [ X ] | 100k/D | Non Refill | Max - 100k',
+                name: '14732 - Instagram Followers|  Max - 100k price- 70/k',
                 rate: 70,
                 min: 100,
                 max: 100000
@@ -33,23 +33,12 @@ const SERVICE_CATEGORIES = {
             }
         }
     },
-    jiohotstar: {
-        name: 'JioHotstar Services',
-        services: {
-            jiohotstar_premium: {
-                name: '16294 - JioHotstar Premium Boost | 24H | Refill 30D | Max - 50k',
-                rate: 100,
-                min: 1000,
-                max: 50000
-            }
-        }
-    }
-};
+
 
 const SERVICE_RATES = {
     instagram_followers: 70,
     youtube_views: 50,
-    jiohotstar_premium: 100
+    
 };
 
 const SERVICE_NAMES = {
