@@ -16,7 +16,7 @@ const SERVICE_CATEGORIES = {
         services: {
             instagram_followers: {
                 name: '14732 - Instagram Followers [ X ] | 100k/D | Non Refill | Max - 100k',
-                rate: 70,
+                rate: 100,
                 min: 100,
                 max: 100000
             }
@@ -502,7 +502,7 @@ function isOrderValid() {
 
 // Copy UPI ID
 async function copyUPI() {
-    const upiId = '9859130932@fam';
+    const upiId = '9365519081@fam';
     
     try {
         await navigator.clipboard.writeText(upiId);
@@ -529,7 +529,7 @@ function sendToAdmin() {
     }
     
     const message = generateWhatsAppMessage(transactionId);
-    const whatsappUrl = `https://wa.me/9859130932?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/9365519081?text=${encodeURIComponent(message)}`;
     
     // Open WhatsApp
     window.open(whatsappUrl, '_blank');
@@ -549,7 +549,7 @@ Link: ${currentOrder.link}`;
 
 // Contact admin
 function contactAdmin() {
-    const whatsappUrl = `https://wa.me/918123456789?text=${encodeURIComponent('Hi, I need help with my order')}`;
+    const whatsappUrl = `https://wa.me/9365519081@fam?text=${encodeURIComponent('Hi, I need help with my order')}`;
     window.open(whatsappUrl, '_blank');
 }
 
