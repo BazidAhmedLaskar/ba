@@ -16,7 +16,7 @@ const SERVICE_CATEGORIES = {
         services: {
             instagram_followers: {
                 name: '14732 - Instagram Followers [ X ] | 100k/D | Non Refill | Max - 100k',
-                rate: 100,
+                rate: 200,
                 min: 100,
                 max: 100000
             }
@@ -643,3 +643,4 @@ style.textContent = `
 }
 `;
 document.head.appendChild(style);
+
